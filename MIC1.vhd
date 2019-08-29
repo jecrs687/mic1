@@ -85,10 +85,39 @@ begin
 		when '1' => amux <= MBR;
 	end case;
 end process;	
+		
+	//PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES	
+	process(clk)
+		if(rising_edge(clk)AND ENC='1') then
+			case sigB is
+				when "0000" =>  PC   <=barC;
+				when "0001" =>  AC   <=barC;
+				when "0010" =>  SP   <=barC;
+				when "0011" =>  IR   <=barC;
+				when "0100" =>  TIR  <=barC;
+				when "0101" =>   0   <=barC;
+				when "0110" =>   1   <=barC;
+				when "0111" =>  -1   <=barC;
+				when "1000" => AMASK <=barC;
+				when "1001" => SMASK <=barC;
+				when "1010" =>   A   <=barC;
+				when "1011" =>   B   <=barC;
+				when "1100" =>   C   <=barC;
+				when "1101" =>   D   <=barC;
+				when "1110" =>   E   <=barC;
+				when others =>   F   <=barC;
+			end case;
+		else
+			enc<=enc;
+			sigB<=sigB;
+		end if;
+	end process;
+			
+		//PROCESS que controla o mar		
 	process(clk)
 		if (rising_edge(clk)) then
-			if (wrmar ='1') then
-				MAR <= barB;
+			if (MAR ='1') then
+				MAR_reg <= barB;
 			end if;
 		end if
 	end process;
