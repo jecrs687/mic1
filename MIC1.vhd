@@ -23,7 +23,7 @@ entity MIC1 is
 		z: out std_logic;
 		n: out std_logic;
 		c: out std_logic_vector(15 downto 0);
-		alu: in std_logic;
+		alu: in std_logic
 		
 	);
 end MIC1;
