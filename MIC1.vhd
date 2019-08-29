@@ -39,8 +39,7 @@ signal	saidaAmux : std_logic;
 signal :std_logic;
 
 begin
-	process(clk)   -- process dos barramentos A e B recebendo o respectivo register
-    if (rising_edge(clk)) then
+
 	case sigA is
 		when "0000" => barA <= PC;
 		when "0001" => barA <= AC;
@@ -78,13 +77,12 @@ begin
 		when "1110" => barB <= E;
 		when others => barB <= F;
 	end case;
-	end if;
+
 	
 	case A0 is -- AMUX
 		when '0' => amux <= A;
 		when '1' => amux <= MBR;
-	end case;
-end process;	
+	end case;	
 		
 	//PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES	
 	process(clk)
