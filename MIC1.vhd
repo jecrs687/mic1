@@ -5,33 +5,39 @@ use ieee.std_logic_unsigned.all;
 
 entity MIC1 is
 	port (
-		MBR : buffer std_logic_vector(15 downto 0);
-		MAR : buffer std_logic_vector(11 downto 0)
+		MBR_reg : out std_logic_vector(15 downto 0);
+		MAR_reg : inout std_logic_vector(11 downto 0);
+		MBR : in std_logic;
+		MAR : in std_logic;
+		barA: in std_logic_vector(3 dowto 0);
+		barB: in std_logic_vector(3 dowto 0);
+		barC: in std_logic_vector(3 dowto 0);
+		RD: in std_logic;
+		WR: in std_logic;
+		AMUX: in std_logic;
+		SH: in std_logic;
+		ENC: in std_logic;
+		MAR: in std_logic;
+		MEM_TO_MBR: in std_logic;
+		DATA: in std_logic;
+		z: out std_logic;
+		n: out std_logic;
+		c: out std_logic_vector(15 downto 0)
+		
+		
 	);
 end MIC1;
 
 architecture mic of MIC1 is
 signal  sigA, sigB, sigC : std_logic_vector(3 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
-signal  N, Z : std_logic_vector;
 signal	A0 : std_logic;
 signal	op2 : std_logic;
 signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0)
-signal	amux : std_logic;
 signal	saidaAmux : std_logic;
 signal	alu : std_logic_vector(1 downto 0);
 signal	SH :  std_logic_vector(1 downto 0);
-signal	mbr : std_logic;
-signal	mar : std_logic;
-signal rdmbr:std_logic;
-signal wrmbr:std_logic;
-signal wrmar:std_logic;
-signal contciclo: integer:=0;
 signal :std_logic;
-/*signal	RD : std_logic;
-signal 	WR : std_logic;*/
-signal ENC : std_logic;
-signal	barA , barB , barC : std_logic_vector(15 downto 0);
 
 begin
 	process(clk)   -- process dos barramentos A e B recebendo o respectivo register
@@ -79,22 +85,14 @@ begin
 		when '0' => amux <= A;
 		when '1' => amux <= MBR;
 	end case;
-end process;		
-process(clk)
-if (rising_edge(clk))
-contciclo = contciclo+1;
-if (contciclo=2)
-
-end process
-end if
-end if
-		process(clk)
-			if -- rising
-				if (wrmar ='1') then
+end process;	
+	process(clk)
+		if (rising_edge(clk)) then
+			if (wrmar ='1') then
 				MAR <= barB;
-				end if;
 			end if;
-		end process;
+		end if
+	end process;
 		
 	case alu is
 		when "00" => ULAresult <= amux + B;
