@@ -9,9 +9,9 @@ entity MIC1 is
 		MAR_reg : inout std_logic_vector(11 downto 0);
 		MBR : in std_logic;
 		MAR : in std_logic;
-		barA: in std_logic_vector(3 dowto 0);
-		barB: in std_logic_vector(3 dowto 0);
-		barC: in std_logic_vector(3 dowto 0);
+		sigA: in std_logic_vector(3 dowto 0);
+		sigB: in std_logic_vector(3 dowto 0);
+		sigC: in std_logic_vector(3 dowto 0);
 		RD: inout std_logic;
 		WR: in std_logic;
 		AMUX: in std_logic;
@@ -30,7 +30,7 @@ end MIC1;
 
 architecture mic of MIC1 is
 signal reg_rd: std_logic;
-signal  sigA, sigB, sigC : std_logic_vector(3 downto 0);
+signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
 signal	A0 : std_logic;
 signal	op2 : std_logic;
