@@ -84,7 +84,7 @@ begin
 		when '1' => amux <= MBR;
 	end case;	
 		
-	//PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES	
+	/*PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES*/
 	process(clk)
 		if(rising_edge(clk)AND ENC='1') then
 			case sigB is
