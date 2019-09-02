@@ -20,11 +20,11 @@ entity MIC1 is
 		SH : in std_logic;
 		ENC : in std_logic;
 		MAR : in std_logic;
-		MEM_TO_MBR : in std_logic;
-		DATA: in std_logic_vector(15 downto 0);
+		mem_to_mbr : in std_logic;
+		DATA: in std_logic_vector(15 downto 0); -- De onde vem DATA?
 		z : out std_logic;
 		n : out std_logic;
-		c : out std_logic_vector(15 downto 0); -- nao implementado ainda 
+		C : out std_logic_vector(15 downto 0); -- nao implementado ainda, o que fazer?
 		alu : in std_logic
 		
 	);
@@ -44,8 +44,8 @@ begin
 	zero <= "0000000000000000";
 	um <= "0000000000000001";
 	menos_um <= "1111111111111111";
-	AMASK <= 
-	SMASK <=
+	AMASK <= "0000111111111111";
+	SMASK <= "0000000011111111";
 		
 	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para rd que é um sinal de sainda
@@ -88,8 +88,6 @@ begin
 		when others => barA <= F;
 	end case;
 
-		
-		
 	--case que controla a entrada do barramento b
 	case sigB is
 		when "0000" => barB <= PC;
@@ -109,7 +107,6 @@ begin
 		when "1110" => barB <= E;
 		when others => barB <= F;
 	end case;
-
 	
 	case A0 is -- AMUX
 		when '0' => amux <= A;
@@ -118,7 +115,7 @@ begin
 		
 	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 	process(clk)
-		if(rising_edge(clk)AND ENC='1') then
+		if(rising_edge(clk) end ENC='1') then
 			case sigC is
 				when "0000" =>  PC   <= barC;
 				when "0001" =>  AC   <= barC;
@@ -180,5 +177,3 @@ begin
 		end if;
 	end process;
 end mic;
-	
-	
