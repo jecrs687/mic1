@@ -35,15 +35,15 @@ signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
 signal	A0 : std_logic;
 signal	op2 : std_logic;
-signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0)
+signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0);
 signal	saidaAmux : std_logic;
 signal  register_RD : std_logic;
 signal register_WR : std_logic;
 
 begin
 	
-	/*RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
-	seu valor interno para rd que é um sinal de sainda*/
+	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
+	--seu valor interno para rd que é um sinal de sainda
 	process(clk)
 		if(rising_edge(clk)) then
 			register_RD <= RD;
@@ -52,8 +52,8 @@ begin
 			rd <= register_RD;
 		end if;
 	end process
-	/*WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
-	seu valor interno para wr que é um sinal de sainda*/
+	--WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
+	--seu valor interno para wr que é um sinal de sainda
 	process(clk)
 		if(rising_edge(clk)) then
 			register_WR<=WR;
@@ -63,7 +63,7 @@ begin
 		end if;
 	end process
 	
-        //case que controla a entrada do barramento A
+        --case que controla a entrada do barramento A
 	case sigA is
 		when "0000" => barA <= PC;
 		when "0001" => barA <= AC;
@@ -85,7 +85,7 @@ begin
 
 		
 		
-	//case que controla a entrada do barramento b
+	--case que controla a entrada do barramento b
 	case sigB is
 		when "0000" => barB <= PC;
 		when "0001" => barB <= AC;
@@ -111,7 +111,7 @@ begin
 		when '1' => amux <= MBR;
 	end case;	
 		
-	//PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
+	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 	process(clk)
 		if(rising_edge(clk)AND ENC='1') then
 			case sigC is
@@ -137,8 +137,7 @@ begin
 			sigC<=sigC;
 		end if;
 	end process;
-			
-		//PROCESS que controla o mar		
+				
 	process(clk)
 		if (rising_edge(clk)) then
 			if (MAR ='1') then
@@ -163,8 +162,8 @@ begin
 	
 	case SH is
 		when "00" => barC <= ULAresult;
-		when "01" => barC <= (ULAresult * 0010); --desloca 1bit para a esquerda variable C sll 1 (sla para adicionar esq 1bit = 1)
-		when "10" => barC <= (ULAresult / 0010); --desloca 1bit para a direita  variable C srl 1 (sra para adicionar dir 1bit = 1
+		when "01" => barC <= '0' & ULAresult(15 downto 1); --desloca 1bit para a esquerda 
+		when "10" => barC <= '0' & ULAresult(14 downto 0); --desloca 1bit para a direita
 		when "11" => NULL;
 	end case;
 
@@ -174,7 +173,6 @@ begin
 				MBR <= barC;
 			end if;
 		end process;
-		
 end mic;
 	
 	
