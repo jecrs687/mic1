@@ -50,23 +50,25 @@ begin
 	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para rd que é um sinal de sainda
 	process(clk)
+		begin
 		if(rising_edge(clk)) then
 			register_RD <= RD;
 		end if;
 		if(falling_edge(clk)) then 
 			rd <= register_RD;
 		end if;
-	end process
+	end process;
 	--WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para wr que é um sinal de sainda
 	process(clk)
+		begin
 		if(rising_edge(clk)) then
 			register_WR<=WR;
 		end if;
 		if(falling_edge(clk)) then 
 			wr <= register_WR;
 		end if;
-	end process
+	end process;
 	
         --case que controla a entrada do barramento A
 	case sigA is
@@ -115,6 +117,7 @@ begin
 		
 	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 	process(clk)
+		begin
 		if(rising_edge(clk) end ENC='1') then
 			case sigC is
 				when "0000" =>  PC   <= barC;
@@ -137,6 +140,7 @@ begin
 	end process;
 				
 	process(clk)
+		begin
 		if (rising_edge(clk)) then
 			if (MAR ='1') then
 				MAR_reg <= barB;
