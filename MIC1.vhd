@@ -14,14 +14,14 @@ entity MIC1 is
 		sigC: in std_logic_vector(3 dowto 0);
 		RD: in std_logic;
 		WR: in std_logic;
-		register_Rd : out std_logic;
-		register_WR : out std_logic;
+		rd : out std_logic;
+		wr : out std_logic;
 		AMUX: in std_logic;
 		SH: in std_logic;
 		ENC: in std_logic;
 		MAR: in std_logic;
 		MEM_TO_MBR: in std_logic;
-		DATA: in std_logic;
+		DATA: in std_logic_vector(15 downto 0);
 		z: out std_logic;
 		n: out std_logic;
 		c: out std_logic_vector(15 downto 0);
@@ -31,18 +31,39 @@ entity MIC1 is
 end MIC1;
 
 architecture mic of MIC1 is
-signal reg_rd: std_logic;
 signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
 signal	A0 : std_logic;
 signal	op2 : std_logic;
 signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0)
 signal	saidaAmux : std_logic;
-signal  rd : std_logic;
-signal wr : std_logic;
+signal  register_RD : std_logic;
+signal register_WR : std_logic;
 
 begin
-
+	
+	/*RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
+	seu valor interno para rd que é um sinal de sainda*/
+	process(clk)
+		if(rising_edge(clk)) then
+			rd<=RD;
+		end if;
+		if(rising_edge(clk)) then 
+			register_RD <= rd;
+		end if;
+	end process
+	/*WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
+	seu valor interno para wr que é um sinal de sainda*/
+	process(clk)
+		if(rising_edge(clk)) then
+			wr<=WR;
+		end if;
+		if(rising_edge(clk)) then 
+			register_WR <= wr;
+		end if;
+	end process
+	
+        //case que controla a entrada do barramento A
 	case sigA is
 		when "0000" => barA <= PC;
 		when "0001" => barA <= AC;
@@ -62,6 +83,9 @@ begin
 		when others => barA <= F;
 	end case;
 
+		
+		
+	//case que controla a entrada do barramento b
 	case sigB is
 		when "0000" => barB <= PC;
 		when "0001" => barB <= AC;
@@ -87,10 +111,10 @@ begin
 		when '1' => amux <= MBR;
 	end case;	
 		
-	/*PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES*/
+	//PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 	process(clk)
 		if(rising_edge(clk)AND ENC='1') then
-			case sigB is
+			case sigC is
 				when "0000" =>  PC   <=barC;
 				when "0001" =>  AC   <=barC;
 				when "0010" =>  SP   <=barC;
@@ -110,7 +134,7 @@ begin
 			end case;
 		else
 			enc<=enc;
-			sigB<=sigB;
+			sigC<=sigC;
 		end if;
 	end process;
 			
@@ -144,27 +168,6 @@ begin
 		when "11" => NULL;
 	end case;
 
-		if(ENC = '1') then 
-			case sigC is
-		when "0000" => PC  <= barC; 
-		when "0001" => AC  <= barC;
-		when "0010" => SP  <= barC;
-		when "0011" => IR  <= barC;
-		when "0100" => TIR <= barC;
-		when "0101" => 0   <= barC;
-		when "0110" => 1   <= barC;
-		when "0111" => -1   <= barC;
-		when "1000" => AMASK <= barC;
-		when "1001" => SMASK <= barC;
-		when "1010" => A    <= barC;
-		when "1011" => B   <= barC;
-		when "1100" => C   <= barC;
-		when "1101" => D   <= barC;
-		when "1110" => E   <= barC;
-		when others => F   <= barC;
-	end case;
-		else NULL;
-	end if;
 	process(clk)
 		begin
 			if(WR = '1') then
