@@ -12,8 +12,10 @@ entity MIC1 is
 		sigA: in std_logic_vector(3 dowto 0);
 		sigB: in std_logic_vector(3 dowto 0);
 		sigC: in std_logic_vector(3 dowto 0);
-		RD: inout std_logic;
+		RD: in std_logic;
 		WR: in std_logic;
+		register_Rd : out std_logic;
+		register_WR : out std_logic;
 		AMUX: in std_logic;
 		SH: in std_logic;
 		ENC: in std_logic;
@@ -36,7 +38,8 @@ signal	A0 : std_logic;
 signal	op2 : std_logic;
 signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0)
 signal	saidaAmux : std_logic;
-signal :std_logic;
+signal  rd : std_logic;
+signal wr : std_logic;
 
 begin
 
