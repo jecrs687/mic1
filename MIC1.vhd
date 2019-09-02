@@ -41,7 +41,12 @@ signal  register_RD : std_logic;
 signal register_WR : std_logic;
 
 begin
-	
+	zero <= "0000000000000000";
+	um <= "0000000000000001";
+	menos_um <= "1111111111111111";
+	AMASK <= 
+	SMASK <=
+		
 	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para rd que é um sinal de sainda
 	process(clk)
@@ -70,9 +75,9 @@ begin
 		when "0010" => barA <= SP;
 		when "0011" => barA <= IR;
 		when "0100" => barA <= TIR;
-		when "0101" => barA <= 0;
-		when "0110" => barA <= 1;
-		when "0111" => barA <= -1;
+		when "0101" => barA <= zero;
+		when "0110" => barA <= um;
+		when "0111" => barA <= menos_um;
 		when "1000" => barA <= AMASK;
 		when "1001" => barA <= SMASK;
 		when "1010" => barA <= A;
@@ -92,9 +97,9 @@ begin
 		when "0010" => barB <= SP;
 		when "0011" => barB <= IR;
 		when "0100" => barB <= TIR;
-		when "0101" => barB <= 0;
-		when "0110" => barB <= 1;
-		when "0111" => barB <= -1;
+		when "0101" => barB <= zero;
+		when "0110" => barB <= um;
+		when "0111" => barB <= menos_um;
 		when "1000" => barB <= AMASK;
 		when "1001" => barB <= SMASK;
 		when "1010" => barB <= A;
@@ -115,22 +120,12 @@ begin
 	process(clk)
 		if(rising_edge(clk)AND ENC='1') then
 			case sigC is
-				when "0000" =>  PC   <=barC;
-				when "0001" =>  AC   <=barC;
-				when "0010" =>  SP   <=barC;
-				when "0011" =>  IR   <=barC;
-				when "0100" =>  TIR  <=barC;
-				when "0101" =>   0   <=barC;
-				when "0110" =>   1   <=barC;
-				when "0111" =>  -1   <=barC;
-				when "1000" => AMASK <=barC;
-				when "1001" => SMASK <=barC;
-				when "1010" =>   A   <=barC;
-				when "1011" =>   B   <=barC;
-				when "1100" =>   C   <=barC;
-				when "1101" =>   D   <=barC;
-				when "1110" =>   E   <=barC;
-				when others =>   F   <=barC;
+				when "0000" =>  PC   <= barC;
+				when "0001" =>  AC   <= barC;
+				when "0010" =>  SP   <= barC;
+				when "0011" =>  IR   <= barC;
+				when "0100" =>  TIR  <= barC;
+			when others => NULL;  
 			end case;
 		else
 			enc<=enc;
