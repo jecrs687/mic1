@@ -46,20 +46,20 @@ begin
 	seu valor interno para rd que é um sinal de sainda*/
 	process(clk)
 		if(rising_edge(clk)) then
-			rd<=RD;
+			register_RD <= RD;
 		end if;
 		if(rising_edge(clk)) then 
-			register_RD <= rd;
+			rd <= register_RD;
 		end if;
 	end process
 	/*WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	seu valor interno para wr que é um sinal de sainda*/
 	process(clk)
 		if(rising_edge(clk)) then
-			wr<=WR;
+			register_WR<=WR;
 		end if;
 		if(rising_edge(clk)) then 
-			register_WR <= wr;
+			wr <= register_WR;
 		end if;
 	end process
 	
