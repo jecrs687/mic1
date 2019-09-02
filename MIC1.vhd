@@ -9,23 +9,23 @@ entity MIC1 is
 		MAR_reg : inout std_logic_vector(11 downto 0);
 		MBR : in std_logic;
 		MAR : in std_logic;
-		sigA: in std_logic_vector(3 dowto 0);
-		sigB: in std_logic_vector(3 dowto 0);
-		sigC: in std_logic_vector(3 dowto 0);
-		RD: in std_logic;
-		WR: in std_logic;
-		rd : out std_logic;
-		wr : out std_logic;
-		AMUX: in std_logic;
-		SH: in std_logic;
-		ENC: in std_logic;
-		MAR: in std_logic;
-		MEM_TO_MBR: in std_logic;
+		sigA : in std_logic_vector(3 dowto 0);
+		sigB : in std_logic_vector(3 dowto 0);
+		sigC : in std_logic_vector(3 dowto 0);
+		RD : in std_logic;
+		WR : in std_logic;
+		rd : out std_logic; -- saida
+		wr : out std_logic; -- saida
+		AMUX : in std_logic;
+		SH : in std_logic;
+		ENC : in std_logic;
+		MAR : in std_logic;
+		MEM_TO_MBR : in std_logic;
 		DATA: in std_logic_vector(15 downto 0);
-		z: out std_logic;
-		n: out std_logic;
-		c: out std_logic_vector(15 downto 0);
-		alu: in std_logic
+		z : out std_logic;
+		n : out std_logic;
+		c : out std_logic_vector(15 downto 0); -- nao implementado ainda 
+		alu : in std_logic
 		
 	);
 end MIC1;
@@ -53,7 +53,7 @@ begin
 		if(rising_edge(clk)) then
 			register_RD <= RD;
 		end if;
-		if(rising_edge(clk)) then 
+		if(falling_edge(clk)) then 
 			rd <= register_RD;
 		end if;
 	end process
@@ -63,7 +63,7 @@ begin
 		if(rising_edge(clk)) then
 			register_WR<=WR;
 		end if;
-		if(rising_edge(clk)) then 
+		if(falling_edge(clk)) then 
 			wr <= register_WR;
 		end if;
 	end process
@@ -125,6 +125,12 @@ begin
 				when "0010" =>  SP   <= barC;
 				when "0011" =>  IR   <= barC;
 				when "0100" =>  TIR  <= barC;
+				when "1010" =>   A   <=barC;
+				when "1011" =>   B   <=barC;
+				when "1100" =>   C   <=barC;
+				when "1101" =>   D   <=barC;
+				when "1110" =>   E   <=barC;
+				when "1111" =>   F   <=barC;
 			when others => NULL;  
 			end case;
 		else
@@ -164,10 +170,15 @@ begin
 
 	process(clk)
 		begin
-			if(WR = '1') then
+		if (rising_edge(clk)) then 
+			if(MBR = '1' and MAR = '0') then 
 				MBR <= barC;
-			end if;
-		end process;
+		elsif(MBR ='1' and mem_to_mbr ='0') then 
+			MBR <= DATA;
+			else MBR <= MBR;
+		end if;
+		end if;
+	end process;
 end mic;
 	
 	
