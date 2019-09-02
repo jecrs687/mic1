@@ -14,13 +14,13 @@ entity MIC1 is
 		sigC : in std_logic_vector(3 dowto 0);
 		RD : in std_logic;
 		WR : in std_logic;
-		rd : out std_logic; -- saida
-		wr : out std_logic; -- saida
+		rd : out std_logic; 
+		wr : out std_logic; 
 		AMUX : in std_logic;
 		SH : in std_logic;
 		ENC : in std_logic;
 		MAR : in std_logic;
-		mem_to_mbr : in std_logic;
+		mem_to_mbr : in std_logic;   -- memoria para mbr
 		DATA: in std_logic_vector(15 downto 0); -- De onde vem DATA?
 		z : out std_logic;
 		n : out std_logic;
