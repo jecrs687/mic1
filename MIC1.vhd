@@ -7,19 +7,16 @@ entity MIC1 is
 	port (
 		MBR_reg : out std_logic_vector(15 downto 0);
 		MAR_reg : inout std_logic_vector(11 downto 0);
-		MBR : in std_logic;
-		MAR : in std_logic;
 		sigA : in std_logic_vector(3 dowto 0);
 		sigB : in std_logic_vector(3 dowto 0);
 		sigC : in std_logic_vector(3 dowto 0);
 		RD : in std_logic;
 		WR : in std_logic;
-		rd : out std_logic; 
-		wr : out std_logic; 
+		regis_rd : out std_logic; 
+		regis_wr : out std_logic; 
 		AMUX : in std_logic;
 		SH : in std_logic;
 		ENC : in std_logic;
-		MAR : in std_logic;
 		mem_to_mbr : in std_logic;   -- memoria para mbr
 		DATA: in std_logic_vector(15 downto 0); -- De onde vem DATA?
 		z : out std_logic;
@@ -38,7 +35,9 @@ signal	op2 : std_logic;
 signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0);
 signal	saidaAmux : std_logic;
 signal  register_RD : std_logic;
-signal register_WR : std_logic;
+signal  mbr_signal : std_logic;
+signal  mar_signal : std_logic;
+signal  register_WR : std_logic;
 
 begin
 	zero <= "0000000000000000";
@@ -172,7 +171,7 @@ begin
 	process(clk)
 		begin
 		if (rising_edge(clk)) then 
-			if(MBR = '1' and MAR = '0') then 
+			if(mbr_signal = '1' and mar_signal = '0') then 
 				MBR <= barC;
 		elsif(MBR ='1' and mem_to_mbr ='0') then 
 			MBR <= DATA;
