@@ -39,8 +39,9 @@ signal  register_RD : std_logic;
 signal  register_WR : std_logic;
 
 begin
-	
-	C<=barC;
+	MBR_reg<="0000000001100000";
+	PC<="0000000000000000";
+	C_out<=barC;
 	zero <= "0000000000000000";
 	um <= "0000000000000001";
 	menos_um <= "1111111111111111";
@@ -49,6 +50,7 @@ begin
 		
 	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para rd que é um sinal de sainda
+-----------------------------------------------------------------------------------------------------------------
 	process(clk)
 		begin
 		if(rising_edge(clk)) then
@@ -59,6 +61,7 @@ begin
 	end process;
 	--WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
 	--seu valor interno para wr que é um sinal de sainda
+-----------------------------------------------------------------------------------------------------------------
 	process(clk)
 		begin
 		if(rising_edge(clk)) then
@@ -67,7 +70,7 @@ begin
 			register_WR<=register_WR; 
 		end if;
 	end process;
-	
+-----------------------------------------------------------------------------------------------------------------	
         --case que controla a entrada do barramento A
 	with sigA select
 		barA <= PC when "0000",
@@ -86,7 +89,7 @@ begin
 		D when "1101" ,
 		E when "1110" ,
 		F when others;
-
+-----------------------------------------------------------------------------------------------------------------
 	--case que controla a entrada do barramento b
 	with sigB select
 	barB <= PC when "0000",
@@ -105,14 +108,15 @@ begin
 		D when "1101" ,
 		E when "1110" ,
 		F when others;
-	
+-----------------------------------------------------------------------------------------------------------------
 	with A0 select -- AMUX
-		saidaAmux <= A when '0',
+		saidaAmux <= barA when '0',
 		MBR_reg when '1',
 		saidaAmux when others;  
 	
 		
 	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
+-----------------------------------------------------------------------------------------------------------------	
 	process(clk)
 		begin
 		if(rising_edge(clk) AND ENC='1') then
@@ -130,22 +134,23 @@ begin
 				when "1111" =>   F   <=barC;
 			when others => NULL;  
 			end case;
-
 		end if;
 	end process;
-				
+-----------------------------------------------------------------------------------------------------------------				
 	process(clk)
 		begin
 		if (rising_edge(clk) and MAR_signal='1') then
 				MAR_reg <= barB(11 downto 0);
 		end if;
-	end process;	
+	end process;
+-----------------------------------------------------------------------------------------------------------------
+	
 	with alu select
 		ULAresult <=saidaAmux  + B when "00",
 		saidaAmux and B when "01",
 		saidaAmux when "10",
-		ULAresult when others;
-	 
+		not saidaAmux when others;
+-----------------------------------------------------------------------------------------------------------------	 
 	process(clk)
 	begin
 	if(rising_edge(clk)) then
@@ -159,12 +164,13 @@ begin
 	end if;
 	end if;
 	end process;
-
+-----------------------------------------------------------------------------------------------------------------
 	with SH select
 		barC <= ULAresult when "00",
-		'0' & ULAresult(15 downto 1) when "01", --desloca 1bit para a direita 
-		ULAresult(14 downto 0)&'0' when "10", --desloca 1bit para a esquerda
+		ULAresult(14 downto 0)&'0' when "01", --desloca 1bit para a direita 
+		'0' & ULAresult(15 downto 1) when "10", --desloca 1bit para a esquerda
 		barC when others;  
+-----------------------------------------------------------------------------------------------------------------
 	process(clk)
 		begin
 		if (rising_edge(clk)) then 
@@ -177,4 +183,5 @@ begin
 		end if;
 		end if;
 	end process;
+-----------------------------------------------------------------------------------------------------------------
 end mic;
