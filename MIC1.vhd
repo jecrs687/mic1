@@ -4,25 +4,27 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
 entity MIC1 is
-	port (
-		MBR_reg : out std_logic_vector(15 downto 0);
-		MAR_reg : inout std_logic_vector(11 downto 0);
-		sigA : in std_logic_vector(3 dowto 0);
-		sigB : in std_logic_vector(3 dowto 0);
-		sigC : in std_logic_vector(3 dowto 0);
+	port (	clk:in std_logic;
+		MBR_reg : inout std_logic_vector(15 downto 0);
+		MAR_reg : out std_logic_vector(11 downto 0);
+		sigA : in std_logic_vector(3 downto 0);
+		sigB : in std_logic_vector(3 downto 0);
+		sigC : in std_logic_vector(3 downto 0);
 		RD : in std_logic;
 		WR : in std_logic;
+		A0 : in std_logic; 
 		regis_rd : out std_logic; 
 		regis_wr : out std_logic; 
-		AMUX : in std_logic;
-		SH : in std_logic;
+		SH : in std_logic_vector(1 downto 0);
 		ENC : in std_logic;
 		mem_to_mbr : in std_logic;   -- memoria para mbr
 		DATA: in std_logic_vector(15 downto 0); -- De onde vem DATA?
 		z : out std_logic;
 		n : out std_logic;
-		C : out std_logic_vector(15 downto 0); -- nao implementado ainda, o que fazer?
-		alu : in std_logic
+		C_out : out std_logic_vector(15 downto 0); -- nao implementado ainda, o que fazer?
+		alu : in std_logic_vector(1 downto 0);
+  		mbr_signal :in std_logic;
+		mar_signal :in std_logic
 		
 	);
 end MIC1;
@@ -30,16 +32,15 @@ end MIC1;
 architecture mic of MIC1 is
 signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
-signal	A0 : std_logic;
 signal	op2 : std_logic;
-signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f : std_logic_vector(15 downto 0);
-signal	saidaAmux : std_logic;
+signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f,zero,um,menos_um,saidaAmux : std_logic_vector(15 downto 0);
 signal  register_RD : std_logic;
-signal  mbr_signal : std_logic;
-signal  mar_signal : std_logic;
+
 signal  register_WR : std_logic;
 
 begin
+	
+	C<=barC;
 	zero <= "0000000000000000";
 	um <= "0000000000000001";
 	menos_um <= "1111111111111111";
@@ -52,9 +53,8 @@ begin
 		begin
 		if(rising_edge(clk)) then
 			register_RD <= RD;
-		end if;
-		if(falling_edge(clk)) then 
-			rd <= register_RD;
+		else
+			register_RD<= register_RD;
 		end if;
 	end process;
 	--WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
@@ -63,61 +63,59 @@ begin
 		begin
 		if(rising_edge(clk)) then
 			register_WR<=WR;
-		end if;
-		if(falling_edge(clk)) then 
-			wr <= register_WR;
+			else
+			register_WR<=register_WR; 
 		end if;
 	end process;
 	
         --case que controla a entrada do barramento A
-	case sigA is
-		when "0000" => barA <= PC;
-		when "0001" => barA <= AC;
-		when "0010" => barA <= SP;
-		when "0011" => barA <= IR;
-		when "0100" => barA <= TIR;
-		when "0101" => barA <= zero;
-		when "0110" => barA <= um;
-		when "0111" => barA <= menos_um;
-		when "1000" => barA <= AMASK;
-		when "1001" => barA <= SMASK;
-		when "1010" => barA <= A;
-		when "1011" => barA <= B;
-		when "1100" => barA <= C;
-		when "1101" => barA <= D;
-		when "1110" => barA <= E;
-		when others => barA <= F;
-	end case;
+	with sigA select
+		barA <= PC when "0000",
+		AC when "0001",
+		SP when "0010" ,
+		IR when "0011",
+		TIR when "0100",
+		zero when "0101",
+		um when "0110",
+		menos_um when "0111",
+		AMASK when "1000",
+		SMASK when "1001",
+		A when "1010" ,
+		B when "1011" ,
+		C when "1100" ,
+		D when "1101" ,
+		E when "1110" ,
+		F when others;
 
 	--case que controla a entrada do barramento b
-	case sigB is
-		when "0000" => barB <= PC;
-		when "0001" => barB <= AC;
-		when "0010" => barB <= SP;
-		when "0011" => barB <= IR;
-		when "0100" => barB <= TIR;
-		when "0101" => barB <= zero;
-		when "0110" => barB <= um;
-		when "0111" => barB <= menos_um;
-		when "1000" => barB <= AMASK;
-		when "1001" => barB <= SMASK;
-		when "1010" => barB <= A;
-		when "1011" => barB <= B;
-		when "1100" => barB <= C;
-		when "1101" => barB <= D;
-		when "1110" => barB <= E;
-		when others => barB <= F;
-	end case;
+	with sigB select
+	barB <= PC when "0000",
+		AC when "0001",
+		SP when "0010" ,
+		IR when "0011",
+		TIR when "0100",
+		zero when "0101",
+		um when "0110",
+		menos_um when "0111",
+		AMASK when "1000",
+		SMASK when "1001",
+		A when "1010" ,
+		B when "1011" ,
+		C when "1100" ,
+		D when "1101" ,
+		E when "1110" ,
+		F when others;
 	
-	case A0 is -- AMUX
-		when '0' => amux <= A;
-		when '1' => amux <= MBR;
-	end case;	
+	with A0 select -- AMUX
+		saidaAmux <= A when '0',
+		MBR_reg when '1',
+		saidaAmux when others;  
+	
 		
 	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 	process(clk)
 		begin
-		if(rising_edge(clk) end ENC='1') then
+		if(rising_edge(clk) AND ENC='1') then
 			case sigC is
 				when "0000" =>  PC   <= barC;
 				when "0001" =>  AC   <= barC;
@@ -132,50 +130,50 @@ begin
 				when "1111" =>   F   <=barC;
 			when others => NULL;  
 			end case;
-		else
-			enc<=enc;
-			sigC<=sigC;
+
 		end if;
 	end process;
 				
 	process(clk)
 		begin
-		if (rising_edge(clk)) then
-			if (MAR ='1') then
-				MAR_reg <= barB;
-			end if;
-		end if
+		if (rising_edge(clk) and MAR_signal='1') then
+				MAR_reg <= barB(11 downto 0);
+		end if;
+	end process;	
+	with alu select
+		ULAresult <=saidaAmux  + B when "00",
+		saidaAmux and B when "01",
+		saidaAmux when "10",
+		ULAresult when others;
+	 
+	process(clk)
+	begin
+	if(rising_edge(clk)) then
+	if (ULAresult = "0000000000000000") then
+	Z <= '1';
+	elsif (ULAresult(15) = '1') then
+	N <= '1';
+	else
+		N<='0';
+		Z<='0';
+	end if;
+	end if;
 	end process;
-		
-	case alu is
-		when "00" => ULAresult <= amux + B;
-		when "01" => ULAresult <= amux and B;
-		when "10" => ULAresult <= amux;
-		when others => ULAresult <= not amux;
-		
-			if (ULAresult < "0000000000000000") then
-				Z <= '1';
-				
-			elsif (ULAresult(15) = '1') then
-				N <= '1';
-		end if;	
-	end case;
-	
-	case SH is
-		when "00" => barC <= ULAresult;
-		when "01" => barC <= '0' & ULAresult(15 downto 1); --desloca 1bit para a esquerda 
-		when "10" => barC <= '0' & ULAresult(14 downto 0); --desloca 1bit para a direita
-		when "11" => NULL;
-	end case;
 
+	with SH select
+		barC <= ULAresult when "00",
+		'0' & ULAresult(15 downto 1) when "01", --desloca 1bit para a direita 
+		ULAresult(14 downto 0)&'0' when "10", --desloca 1bit para a esquerda
+		barC when others;  
 	process(clk)
 		begin
 		if (rising_edge(clk)) then 
-			if(mbr_signal = '1' and mar_signal = '0') then 
-				MBR <= barC;
-		elsif(MBR ='1' and mem_to_mbr ='0') then 
-			MBR <= DATA;
-			else MBR <= MBR;
+			if(mbr_signal = '1' and mem_to_mbr ='0') then 
+				MBR_reg <= barC;
+		elsif(MBR_signal ='1' and mem_to_mbr ='1') then 
+			MBR_reg <= DATA;
+			else 
+		MBR_reg <= MBR_reg;
 		end if;
 		end if;
 	end process;
