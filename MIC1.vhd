@@ -18,10 +18,10 @@ entity MIC1 is
 		SH : in std_logic_vector(1 downto 0);
 		ENC : in std_logic;
 		mem_to_mbr : in std_logic;   -- memoria para mbr
-		DATA: in std_logic_vector(15 downto 0); -- De onde vem DATA?
+		DATA: in std_logic_vector(15 downto 0); 
 		z : out std_logic;
 		n : out std_logic;
-		C_out : out std_logic_vector(15 downto 0); -- nao implementado ainda, o que fazer?
+		C_out : out std_logic_vector(15 downto 0); 
 		alu : in std_logic_vector(1 downto 0);
   		mbr_signal :in std_logic;
 		mar_signal :in std_logic
