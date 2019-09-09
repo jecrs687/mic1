@@ -73,6 +73,19 @@ begin
 	end process;
 	process
 	begin
+	control_data<="0000000000000000";
+	control_MBR_signal<='0';
+	control_MAR_signal<='0';
+	control_sigA<="0000";
+	control_sigB<="0000";
+	control_sigC<="0000";
+	control_wr<='0';
+	control_rd<='0';
+	control_sh<="00";
+	control_enc<='0';
+	control_mem_to_mbr<='0';
+	control_A0<='0';
+	control_alu<="00";
 	wait for 200 ps;
 	control_data<="0000000000000000";
 	control_MBR_signal<='0';
@@ -147,4 +160,4 @@ begin
 	
     end process;
 end testbench;
---control_data<="0000000000000000";control_MBR_signal<='0';control_MAR_signal<='0';control_sigA<="0000";control_sigB<="0000";control_sigC<="0000";control_wr<='0';control_rd<='0'control_sh<="00";control_enc<='0';control_mem_to_mbr<='0';control_A0<='0';control_alu<="00";
+
