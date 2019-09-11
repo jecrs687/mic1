@@ -6,7 +6,7 @@ use ieee.std_logic_unsigned.all;
 entity MIC1 is
 	port (	
 		clk:in std_logic;
-		MBR_reg : inout std_logic_vector(15 downto 0);
+		mbr_out : buffer std_logic_vector(15 downto 0);
 		MAR_reg : out std_logic_vector(11 downto 0);
 		sigA : in std_logic_vector(3 downto 0);
 		sigB : in std_logic_vector(3 downto 0);
@@ -33,12 +33,14 @@ architecture mic of MIC1 is
 signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
 signal	op2 : std_logic;
-signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f,zero,um,menos_um,saidaAmux : std_logic_vector(15 downto 0);
+signal	PC, AC, SP, IR, TIR, AMASK, SMASK, a, b, c, d, e, f,zero,um,menos_um,saidaAmux, mbr_reg : std_logic_vector(15 downto 0);
 signal  register_RD : std_logic;
 
 signal  register_WR : std_logic;
 
 begin
+-----------------------------------------------------------------------------------------------------------------
+	mbr_out<=mbr_reg;
 	C_out<=barC;
 	zero <= "0000000000000000";
 	um <= "0000000000000001";
@@ -46,8 +48,8 @@ begin
 	AMASK <= "0000111111111111";
 	SMASK <= "0000000011111111";
 		
-	--RD é a entrada para o mic, o register_RD é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
-	--seu valor interno para rd que é um sinal de sainda
+	--RD Ã© a entrada para o mic, o register_RD Ã© um sinal interno que funciona como um registrador que logo apÃ³s o rising_edge ele repassa 
+	--seu valor interno para rd que Ã© um sinal de sainda
 -----------------------------------------------------------------------------------------------------------------
 	process(clk)
 		begin
@@ -57,8 +59,8 @@ begin
 			register_RD<= register_RD;
 		end if;
 	end process;
-	--WR é a entrada para o mic, o register_WR é um sinal interno que funciona como um registrador que logo após o rising_edge ele repassa 
-	--seu valor interno para wr que é um sinal de sainda
+	--WR Ã© a entrada para o mic, o register_WR Ã© um sinal interno que funciona como um registrador que logo apÃ³s o rising_edge ele repassa 
+	--seu valor interno para wr que Ã© um sinal de sainda
 -----------------------------------------------------------------------------------------------------------------
 	process(clk)
 		begin
@@ -71,8 +73,8 @@ begin
 -----------------------------------------------------------------------------------------------------------------
 	
 with alu select
-ULAresult <=saidaAmux  + B when "00",
-saidaAmux and B when "01",
+ULAresult <=saidaAmux  + barB when "00",
+saidaAmux and barB when "01",
 saidaAmux when "10",
 not saidaAmux when others;
 -----------------------------------------------------------------------------------------------------------------
@@ -125,7 +127,7 @@ barC when others;
 		E when "1110" ,
 		F when others;
 
-	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
+	--PROCESS QUE CONTROLA O BARRAMENTO C PASSAR OU NÃO DADOS PARA OS REGISTRADORES
 -----------------------------------------------------------------------------------------------------------------	
 	process(clk)
 		begin
@@ -162,13 +164,13 @@ with ULAresult(15) select
 	'0' when others;
 
 -----------------------------------------------------------------------------------------------------------------
-	process(clk)
+	process(clk, mbr_signal, mem_to_mbr)
 		begin
-		if (rising_edge(clk)) then 
+		if (clk'event and clk='1') then 
 			if(mbr_signal = '1' and mem_to_mbr ='0') then 
 				MBR_reg <= barC;
-		elsif(MBR_signal ='1' and mem_to_mbr ='1') then 
-			MBR_reg <= DATA;
+			elsif(mbr_signal ='0' and mem_to_mbr ='1') then 
+				MBR_reg <= DATA;
 			else 
 		MBR_reg <= MBR_reg;
 		end if;
