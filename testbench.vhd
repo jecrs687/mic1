@@ -7,12 +7,27 @@ end testbench_MIC1;
 ---------------------------------------------------
 
 architecture testbench of testbench_MIC1 is
-signal control_clk,control_MAR_signal, control_MBR_signal,control_wr,control_rd,control_enc,control_mem_to_mbr,control_A0:std_logic; 
-signal saida_MBR,saida_C,control_data: STD_LOGIC_vector(15 downto 0);
-signal saida_z,saida_n,saida_regis_rd,saida_regis_wr:std_logic;
-signal saida_MAR:std_logic_vector(11 downto 0);
-signal control_sigA, control_sigB, control_sigC: std_logic_vector(3 downto 0);
-signal control_sh,control_alu: std_logic_vector(1 downto 0);
+signal control_clk:std_logic :=  '0';
+signal control_MAR_signal:std_logic := '0';
+signal control_MBR_signal: std_logic := '0';
+signal control_wr: std_logic := '0';
+signal control_rd: std_logic := '0';
+signal control_enc: std_logic := '0';
+signal control_mem_to_mbr: std_logic := '0';
+signal control_A0:std_logic := '0'; 
+signal saida_MBR: std_logic_vector(15 downto 0) := "0000000000000000"; 
+signal saida_C: std_logic_vector(15 downto 0)   := "0000000000000000";
+signal control_data: STD_LOGIC_vector(15 downto 0) := "0000000000000000";
+signal saida_z: std_logic := '0';
+signal saida_n: std_logic := '0';
+signal saida_regis_rd: std_logic := '0';
+signal saida_regis_wr: std_logic := '0';
+signal saida_MAR: std_logic_vector(11 downto 0) := "000000000000";
+signal control_sigA: std_logic_vector(3 downto 0) := "0000"; 
+signal control_sigB: std_logic_vector(3 downto 0) := "0000"; 
+signal control_sigC: std_logic_vector(3 downto 0) := "0000"; 
+signal control_sh: std_logic_vector(1 downto 0) := "00";
+signal control_alu: std_logic_vector(1 downto 0) := "00";
 
 component MIC1 is
     port (clk:in std_logic;
