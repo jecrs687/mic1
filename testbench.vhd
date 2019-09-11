@@ -30,8 +30,8 @@ signal control_sh: std_logic_vector(1 downto 0) := "00";
 signal control_alu: std_logic_vector(1 downto 0) := "00";
 
 component MIC1 is
-    port (clk:in std_logic;
-		MBR_reg : inout std_logic_vector(15 downto 0);
+    port (	clk:in std_logic;
+		mbr_out : out std_logic_vector(15 downto 0);
 		MAR_reg : out std_logic_vector(11 downto 0);
 		sigA : in std_logic_vector(3 downto 0);
 		sigB : in std_logic_vector(3 downto 0);
@@ -69,7 +69,7 @@ begin
 	mem_to_mbr=>control_mem_to_mbr,
 	alu=>control_alu,
 	A0=>control_A0,
-	MBR_reg=>saida_MBR,
+	mbr_out=>saida_MBR,
 	C_out=>saida_C,
 	DATA=>control_data,
 	z=>saida_z,
@@ -80,9 +80,8 @@ begin
 );
 	process
 	begin
-		wait for 100 ps;
-		control_data<="0000000000000000";
-		control_MBR_signal<='1';
+		control_data<="0000000000000111";
+		control_MBR_signal<='0';
 		control_MAR_signal<='0';
 		control_sigA<="0000";
 		control_sigB<="0000";
@@ -92,10 +91,9 @@ begin
 		control_sh<="00";--barC
 		control_enc<='0';
 		control_mem_to_mbr<='1';
-		control_A0<='1';--Amux
+		control_A0<='0';--Amux
 		control_alu<="10";
 	wait for 200 ps;
-		control_data<="0000000000000000";
 		control_MBR_signal<='0';
 		control_sigA<="0000";
 		control_sigC<="0000";
@@ -109,7 +107,6 @@ begin
 		control_sigB<="0000";
 		control_MAR_signal<='0';
 	wait for 200 ps;
-		control_data<="0000000000000000";
 		control_MBR_signal<='0';
 		control_MAR_signal<='0';
 		control_wr<='0';
@@ -122,57 +119,12 @@ begin
 		control_sh<="00";--barC
 		control_enc<='0';
 		control_sigC<="0000";
-	wait for 200 ps;
-		control_data<="0000000000000000";
-		control_MBR_signal<='0';
-		control_MAR_signal<='0';
-		control_sigA<="0000";
-		control_sigB<="0000";
-		control_wr<='0';
-		control_rd<='0';
-		control_mem_to_mbr<='0';
-		control_A0<='1';--Amux
-		control_alu<="10";
-		control_sh<="00";--barC
-		control_sigC<="0011";
-		control_enc<='1';
-	wait for 200 ps;
-		control_data<="0000000000000000";
-		control_MBR_signal<='0';
-		control_MAR_signal<='0';
-		control_wr<='0';
-		control_rd<='0';
-		control_mem_to_mbr<='0';
-		control_sigA<="0011";
-		control_sigB<="0011";
-		control_A0<='1';--Amux
-		control_alu<="00";
-		control_sh<="01";--barC
-		control_enc<='1';
-		control_sigC<="0100";
-	wait for 200 ps;
-		control_data<="0000000000000000";
-		control_MBR_signal<='0';
-		control_MAR_signal<='0';
-		control_sigB<="0000";
-		control_wr<='0';
-		control_rd<='0';
-		control_mem_to_mbr<='0';
-		control_sigA<="0011";
-		control_A0<='0';--Amux
-		control_alu<="10";
-		control_sh<="01";--BarC
-		control_enc<='1';
-		control_sigC<="0100";
-	wait for 200 ps;
-	
 	end process;
 	process
     begin
-			control_clk<='0';
-		wait for 100 ps;
 			control_clk<='1';
+		wait for 100 ps;
+			control_clk<='0';
 		wait for 100 ps;  
 	end process;
 end testbench;
-
