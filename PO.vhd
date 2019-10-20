@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-entity MIC1 is
+entity PO is
 	port (	
 		clk:in std_logic;
 		mbr_out : buffer std_logic_vector(15 downto 0);
@@ -27,9 +27,9 @@ entity MIC1 is
   		mbr_signal :in std_logic;
 		mar_signal :in std_logic
 	);
-end MIC1;
+end PO;
 
-architecture mic of MIC1 is
+architecture mic of PO is
 signal  barA, barB, barC : std_logic_vector(15 downto 0);
 signal  ULAresult : std_logic_vector(15 downto 0);
 signal	op2 : std_logic;
