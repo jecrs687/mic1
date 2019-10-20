@@ -31,7 +31,7 @@ signal control_sigC: std_logic_vector(3 downto 0) := "0000";
 signal control_sh: std_logic_vector(1 downto 0) := "00";
 signal control_alu: std_logic_vector(1 downto 0) := "00";
 
-component MIC1 is
+component PO is
     port (	clk:in std_logic;
 		mbr_out : out std_logic_vector(15 downto 0);
 		MAR_reg : out std_logic_vector(11 downto 0);
@@ -56,7 +56,7 @@ component MIC1 is
 end component;
 
 begin
-    x1: MIC1
+    x1: PO
     PORT MAP(
 	clk=>control_clk,	
 	mar_signal => control_MAR_signal,
