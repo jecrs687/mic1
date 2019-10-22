@@ -138,7 +138,7 @@ process
 				wait for 100 ps;
 				
 			case input(15 downto 12) is
-				when '0000' =>   ----------------------------------------- LODDX
+				when "0000" =>   ----------------------------------------- LODDX
 				--linha 6
 				control_data => input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -188,7 +188,7 @@ process
 				
 --------------------------------------------------------------------------------------------------------------------------------
 	
-				when '0001' => -------------------------------------------------------------------------------------- STODD
+				when "0001" => -------------------------------------------------------------------------------------- STODD
 				--linha 9
 				control_data => input(11 downto 0);
 				control_MBR_signal<= '1';
@@ -205,7 +205,7 @@ process
 				control_sigC<="0000";
 				
 				wait for 100 ps;
-				
+				--linha 10
 				control_data => input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
@@ -270,6 +270,68 @@ process
 				control_sigC<="0001";
 				
 				when "0011" => ------------------------------------------------------------------------------------ SUBD (EM DESENVOLVIMENTO)
+				--linha 15
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0000";
+				control_sigB<="0011";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait for 100 ps;
+				--linha 16
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0110";
+				control_sigB<="0001";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0001";
+				
+				wait for 100 ps;
+				--linha 17
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='1';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '1';--Amux
+				control_alu<="11";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait for 100 ps;
+				--linha 18
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
 				
 				when "1000" => ------------------------------------------------------------------------------------ LODL
 				--linha 31
@@ -335,24 +397,235 @@ process
 				control_enc<='1';
 				control_sigC<="0001";
 				
-				when "0111" => ----------------------------------------------------------------------------------- STOL
+				when "1001" => ----------------------------------------------------------------------------------- STOL
 				--linha 33
 				control_data => input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait for 100 ps;
+				--linha 34
+				control_data => input(11 downto 0);
+				control_MBR_signal<='1';
+				control_MAR_signal<='1';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait for 100 ps;
+				----linha 10
+				control_data => input(11 downto 0);
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
 				control_sigA<="0000";
 				control_sigB<="0000";
-				control_A0 <= '1';--Amux
-				control_alu<="10";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				when "1010" => ------------------------------------------------------------------------------------- ADDL
+				--linha 36
+				control_data => input(11 downto 0);
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait for 100 ps;
+				--linha 37
+				control_data => input(11 downto 0);
+				control_MBR_signal<='0';
+				control_MAR_signal<='1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				when "1011" => -----------------------------------------------------------------------------------------SUBL
+				--linha 38
+				control_data => input(11 downto 0);
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait for 100 ps;
+				--linha 39
+				control_data => input(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0000";
+				control_sigB<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait for 100 ps;
+				--linha 16
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0110";
+				control_sigB<="0001";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
 				control_sh<="00";--barC
 				control_enc<='1';
 				control_sigC<="0001";
-			end case
 				
+				wait for 100 ps;
+				--linha 17
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='1';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '1';--Amux
+				control_alu<="11";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait for 100 ps;
+				--linha 18
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010"; 
+			end case
 			end if;
 	end process;
+	
+	process
+		begin
+		case input(15 downto 9) is
+			when "1111000" =>
+				--linha 53
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0000";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
 
+				wait for 100 ps;
+				--linha 54
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0010";
+				control_sigB<="0111";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				wait for 100 ps;
+				--linha 55
+				control_data => input(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait for 100 ps;
+				--linha 10
+				control_data => input(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+
+		end process;
 end Parte_controle;
