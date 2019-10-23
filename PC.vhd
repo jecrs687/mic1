@@ -1,3 +1,8 @@
+-- UNIVERSIDADE FEDERAL DO PIAUÍ
+-- PARTE DE CONTROLE DO MIC-1
+-- INTEGRANTES: JOSÉ EMANUEL
+--------------- ISAAC RAMOS
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 
@@ -186,8 +191,6 @@ process
 				control_enc<='1';
 				control_sigC<="0001";
 				
---------------------------------------------------------------------------------------------------------------------------------
-	
 				when "0001" => -------------------------------------------------------------------------------------- STODD
 				--linha 9
 				control_data => input(11 downto 0);
@@ -659,7 +662,121 @@ process
 				control_enc<='1';
 				control_sigC<="1010"; 
 				
+				when "1100" => --------------------------------------------------------------------------------------------------------------JNEG
+				--linha 42
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				wait for 100 ps;
+				if(n = '1') then
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="0100";
+					control_sigC<="0000";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+				end if;
 				
+				when "1101" => ------------------------------------------------------------------------------------------------------------------------------- JNZE
+				--linha 44
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				
+				wait for 100 ps;
+				--linha 45
+				if(z = '0') then
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="0100";
+					control_sigC<="0000";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+				end if;
+				
+				when "1110" => ----------------------------------------------------------------------------------------------------------------------- CALL
+				--linha 47
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0111";
+				control_sigB<="0010";
+				control_sigC<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_enc<='1';
+				control_sh<="00";
+				
+				wait for 100 ps;
+				--linha 48
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='1';
+				control_MAR_signal<='1';
+				control_wr<='1';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0010";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				
+				wait for 100 ps;
+				--linha 49
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0100";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="01";
+				control_enc<='1';
+				control_sh<="00";
+
+
 				case input(15 downto 9) is
 				when "1111000" =>
 					--linha 53
@@ -885,6 +1002,55 @@ process
 					control_enc<='0';
 					control_sigC<="0001";
 					
+					when "1111100" => -------------------------------------------------------------------------- RETN
+					--linha 67
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='1';
+					control_wr<='0';
+					control_rd<='1';
+					control_sigA<="0110";
+					control_sigB<="0010";
+					control_sigC<="0010";
+					control_A0 <= '0';--Amux
+					control_alu<="00";
+					control_enc<='1';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 68
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='1';
+					control_sigA<="0000";
+					control_sigB<="0000";
+					control_sigC<="0000";
+					control_A0 <= '0';--Amux
+					control_alu<="00";
+					control_enc<='0';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 69
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0000";
+					control_sigB<="0000";
+					control_sigC<="0000";
+					control_A0 <= '1';--Amux
+					control_alu<="10";
+					control_enc<='1';
+					control_sh<="00";
+					
+					
 					when "1111101" => -------------------------------------------------------------------------- SWAP
 					--linha 70
 					control_data => input(11 downto 0); 
@@ -932,9 +1098,104 @@ process
 					control_sh<="00";--barC
 					control_enc<='1';
 					control_sigC<="0010";
-
+					
+					when "1111110" => ------------------------------------------------------------------------------------------------------------ INSP
+					--linha 74
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="0100";
+					control_sigC<="1010";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 75
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="1010";
+					control_sigB<="0010";
+					control_sigC<="0010";
+					control_A0 <= '0';--Amux
+					control_alu<="00";
+					control_enc<='1';
+					control_sh<="00";
+					
+					when "1111111" => ------------------------------------------------------------------------------------------------ DESP
+					--linha 76
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="0100";
+					control_sigC<="1010";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 77
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="1010";
+					control_sigB<="0100";
+					control_sigC<="1010";
+					control_A0 <= '0';--Amux
+					control_alu<="11";
+					control_enc<='1';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 78
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="1010";
+					control_sigB<="0110";
+					control_sigC<="1010";
+					control_A0 <= '0';--Amux
+					control_alu<="00";
+					control_enc<='1';
+					control_sh<="00";
+					
+					wait for 100 ps;
+					--linha 75
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="1010";
+					control_sigB<="0010";
+					control_sigC<="0010";
+					control_A0 <= '0';--Amux
+					control_alu<="00";
+					control_enc<='1';
+					control_sh<="00";
 				end case;	
 			end case
 			end if;
-	end process;
+end process;
 end Parte_controle;
