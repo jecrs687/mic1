@@ -183,7 +183,7 @@ process
 				control_A0 <= '1';--Amux
 				control_alu<="10";
 				control_sh<="00";--barC
-				control_enc<='0';
+				control_enc<='1';
 				control_sigC<="0001";
 				
 --------------------------------------------------------------------------------------------------------------------------------
@@ -269,7 +269,7 @@ process
 				control_enc<='1';
 				control_sigC<="0001";
 				
-				when "0011" => ------------------------------------------------------------------------------------ SUBD (EM DESENVOLVIMENTO)
+				when "0011" => ------------------------------------------------------------------------------------ SUBD
 				--linha 15
 				control_data => input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -331,7 +331,109 @@ process
 				control_alu<="00";
 				control_sh<="00";--barC
 				control_enc<='1';
-				control_sigC<="1010";
+				control_sigC<="0001";]
+				
+				when "0100" => ------------------------------------------------------------------------------------ JPOS
+				--linha 21
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				
+				wait for 100 ps;
+					if(n = '0') then
+					--linha 22
+					control_data <= input(11 downto 0);						control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="1000";
+					control_sigC<="0000";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+					end if;
+				when "0101" => ------------------------------------------------------------------------------------ JZER
+				--linha 23
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				wait for 100 ps;
+				if(z = '1') then
+					--linha 22
+					control_data <= input(11 downto 0);
+					control_mem_to_mbr<='0';
+					control_MBR_signal<='0';
+					control_MAR_signal<='0';
+					control_wr<='0';
+					control_rd<='0';
+					control_sigA<="0011";
+					control_sigB<="1000";
+					control_sigC<="0000";
+					control_A0 <= '0';--Amux
+					control_alu<="01";
+					control_enc<='1';
+					control_sh<="00";
+				end if;
+				
+				when "0110" => ----------------[REVISAR]------------------------------------------------------------ JUMP
+				--linha 26
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_enc<='0';
+				control_sh<="00";
+				
+				wait for 100 ps;
+				
+				control_data <= input(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0100";
+				control_sigC<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="01";
+				control_enc<='1';
+				control_sh<="00";
+				
+				when "0111" => ------------------------------------------------------------------------------------ LOCO
+				--linha 27
+				
+				
 				
 				when "1000" => ------------------------------------------------------------------------------------ LODL
 				--linha 31
