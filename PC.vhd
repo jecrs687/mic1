@@ -95,7 +95,7 @@ process
 end process;
 process
 		begin
-			if (rising_edge(control_clk)) then
+			if (control_clk'event and control_clk='1') then
 				--linha 0
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -110,7 +110,7 @@ process
 				control_sh<="00";--barC
 				control_enc<='0';
 				control_sigC<="0000";
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha1
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -125,7 +125,7 @@ process
 				control_sh<="00";--barC
 				control_enc<='1';
 				control_sigC<="0000";
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 2
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -140,7 +140,7 @@ process
 				control_sh<="00";--barC
 				control_enc<='1';
 				control_sigC<="0011";
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				
 			case input(15 downto 12) is
 				when "0000" =>   ----------------------------------------- LODDX
@@ -159,7 +159,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 7
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -175,7 +175,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				-- linha 8
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -207,7 +207,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 10
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -240,7 +240,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 13
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -256,7 +256,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 14
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -288,7 +288,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 16
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -304,7 +304,7 @@ process
 				control_enc<='1';
 				control_sigC<="0001";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 17
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -320,7 +320,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 18
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -352,7 +352,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 					if(saida_n = '0') then
 					--linha 22
 					control_data <= input(11 downto 0);						
@@ -384,7 +384,7 @@ process
 				control_alu<="10";
 				control_enc<='0';
 				control_sh<="00";
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				if(saida_z = '1') then
 					--linha 22
 					control_data <= input(11 downto 0);
@@ -418,7 +418,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				
 				control_data <= input(11 downto 0);
 				control_mem_to_mbr<='0';
@@ -455,7 +455,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 32
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -471,7 +471,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 7
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -487,7 +487,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 8
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -519,7 +519,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 34
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='1';
@@ -535,7 +535,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				----linha 10
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -567,7 +567,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 37
 				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
@@ -599,7 +599,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 39
 				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
@@ -615,7 +615,7 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 16
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -631,7 +631,7 @@ process
 				control_enc<='1';
 				control_sigC<="0001";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 17
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -647,7 +647,7 @@ process
 				control_enc<='1';
 				control_sigC<="1010";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 18
 				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
@@ -678,7 +678,7 @@ process
 				control_alu<="10";
 				control_enc<='0';
 				control_sh<="00";
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				if(saida_n = '1') then
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -711,7 +711,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 45
 				if(saida_z = '0') then
 					control_data <= input(11 downto 0);
@@ -745,7 +745,7 @@ process
 				control_enc<='1';
 				control_sh<="00";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 48
 				control_data <= input(11 downto 0);
 				control_mem_to_mbr<='0';
@@ -761,7 +761,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				
-				wait for 100 ps;
+				wait until (control_clk'event and control_clk='1');
 				--linha 49
 				control_data <= input(11 downto 0);
 				control_mem_to_mbr<='0';
@@ -795,7 +795,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 54
 					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
@@ -811,7 +811,7 @@ process
 					control_enc<='1';
 					control_sigC<="0010";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 55
 					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
@@ -827,7 +827,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 10
 					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
@@ -859,7 +859,7 @@ process
 					control_enc<='1';
 					control_sigC<="0010";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 57
 					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
@@ -875,7 +875,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 58
 					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
@@ -891,7 +891,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 10
 					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
@@ -923,7 +923,7 @@ process
 					control_enc<='1';
 					control_sigC<="0010";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 61
 					control_data <= input(11 downto 0);
 					control_MBR_signal<= '1';
@@ -939,7 +939,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 10<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
@@ -969,7 +969,7 @@ process
 					control_enc<='1';
 					control_sigC<="0010";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 63<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
@@ -984,7 +984,7 @@ process
 					control_enc<='0';
 					control_sigC<="0000";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 8
 					control_data <= input(11 downto 0);
 					control_MBR_signal<='0';
@@ -1016,7 +1016,7 @@ process
 					control_enc<='1';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 68
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -1032,7 +1032,7 @@ process
 					control_enc<='0';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 69
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -1064,7 +1064,7 @@ process
 					control_enc<='1';
 					control_sigC<="1010";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 71<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
@@ -1079,7 +1079,7 @@ process
 					control_enc<='1';
 					control_sigC<="0001";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 72<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
@@ -1110,7 +1110,7 @@ process
 					control_enc<='1';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 75
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -1142,7 +1142,7 @@ process
 					control_enc<='1';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 77
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -1158,7 +1158,7 @@ process
 					control_enc<='1';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 78
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -1174,7 +1174,7 @@ process
 					control_enc<='1';
 					control_sh<="00";
 					
-					wait for 100 ps;
+					wait until (control_clk'event and control_clk='1');
 					--linha 75
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
