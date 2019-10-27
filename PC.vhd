@@ -8,8 +8,9 @@ USE ieee.std_logic_1164.all;
 
 ----------- Entidade do Testbench -----------
 entity PC is
+	Port(
     input : in std_logic_vector(15 downto 0);
-    output : out std_logic_vector(15 downto 0);
+    output : out std_logic_vector(15 downto 0));
 end PC;
 ---------------------------------------------------
 
@@ -93,11 +94,10 @@ process
 	wait for 100 ps;  
 end process;
 process
-	begin
 		begin
 			if (rising_edge(control_clk)) then
 				--linha 0
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='1';
 				control_wr<='0';
@@ -112,7 +112,7 @@ process
 				control_sigC<="0000";
 				wait for 100 ps;
 				--linha1
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -127,7 +127,7 @@ process
 				control_sigC<="0000";
 				wait for 100 ps;
 				--linha 2
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -145,7 +145,7 @@ process
 			case input(15 downto 12) is
 				when "0000" =>   ----------------------------------------- LODDX
 				--linha 6
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
@@ -159,9 +159,9 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps
+				wait for 100 ps;
 				--linha 7
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -177,7 +177,7 @@ process
 				
 				wait for 100 ps;
 				-- linha 8
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -193,7 +193,7 @@ process
 				
 				when "0001" => -------------------------------------------------------------------------------------- STODD
 				--linha 9
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '1';
 				control_MAR_signal<= '1';
 				control_wr<='1';
@@ -209,7 +209,7 @@ process
 				
 				wait for 100 ps;
 				--linha 10
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='1';
@@ -226,7 +226,7 @@ process
 		
 				when "0010" =>---------------------------------------------------------------------------------------------------- ADDD
 				--linha 12
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
@@ -242,7 +242,7 @@ process
 				
 				wait for 100 ps;
 				--linha 13
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -256,9 +256,9 @@ process
 				control_enc<='0';
 				control_sigC<="0000";
 				
-				wait for 100 ps
+				wait for 100 ps;
 				--linha 14
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -274,7 +274,7 @@ process
 				
 				when "0011" => ------------------------------------------------------------------------------------ SUBD
 				--linha 15
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
@@ -290,7 +290,7 @@ process
 				
 				wait for 100 ps;
 				--linha 16
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -306,7 +306,7 @@ process
 				
 				wait for 100 ps;
 				--linha 17
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -322,7 +322,7 @@ process
 				
 				wait for 100 ps;
 				--linha 18
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -334,7 +334,7 @@ process
 				control_alu<="00";
 				control_sh<="00";--barC
 				control_enc<='1';
-				control_sigC<="0001";]
+				control_sigC<="0001";
 				
 				when "0100" => ------------------------------------------------------------------------------------ JPOS
 				--linha 21
@@ -353,9 +353,10 @@ process
 				control_sh<="00";
 				
 				wait for 100 ps;
-					if(n = '0') then
+					if(saida_n = '0') then
 					--linha 22
-					control_data <= input(11 downto 0);						control_mem_to_mbr<='0';
+					control_data <= input(11 downto 0);						
+					control_mem_to_mbr<='0';
 					control_MBR_signal<='0';
 					control_MAR_signal<='0';
 					control_wr<='0';
@@ -384,7 +385,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				wait for 100 ps;
-				if(z = '1') then
+				if(saida_z = '1') then
 					--linha 22
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
@@ -440,7 +441,7 @@ process
 				
 				when "1000" => ------------------------------------------------------------------------------------ LODL
 				--linha 31
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -456,7 +457,7 @@ process
 				
 				wait for 100 ps;
 				--linha 32
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
@@ -472,7 +473,7 @@ process
 				
 				wait for 100 ps;
 				--linha 7
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -488,7 +489,7 @@ process
 				
 				wait for 100 ps;
 				--linha 8
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -504,7 +505,7 @@ process
 				
 				when "1001" => ----------------------------------------------------------------------------------- STOL
 				--linha 33
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -520,7 +521,7 @@ process
 				
 				wait for 100 ps;
 				--linha 34
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='1';
 				control_MAR_signal<='1';
 				control_wr<='1';
@@ -536,7 +537,7 @@ process
 				
 				wait for 100 ps;
 				----linha 10
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='1';
@@ -552,7 +553,7 @@ process
 				
 				when "1010" => ------------------------------------------------------------------------------------- ADDL
 				--linha 36
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -568,7 +569,7 @@ process
 				
 				wait for 100 ps;
 				--linha 37
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='1';
 				control_wr<='0';
@@ -584,7 +585,7 @@ process
 				
 				when "1011" => -----------------------------------------------------------------------------------------SUBL
 				--linha 38
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -600,7 +601,7 @@ process
 				
 				wait for 100 ps;
 				--linha 39
-				control_data => input(11 downto 0); 
+				control_data <= input(11 downto 0); 
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
@@ -616,7 +617,7 @@ process
 				
 				wait for 100 ps;
 				--linha 16
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -632,7 +633,7 @@ process
 				
 				wait for 100 ps;
 				--linha 17
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -648,7 +649,7 @@ process
 				
 				wait for 100 ps;
 				--linha 18
-				control_data => input(11 downto 0);
+				control_data <= input(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -678,7 +679,7 @@ process
 				control_enc<='0';
 				control_sh<="00";
 				wait for 100 ps;
-				if(n = '1') then
+				if(saida_n = '1') then
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
 					control_MBR_signal<='0';
@@ -712,7 +713,7 @@ process
 				
 				wait for 100 ps;
 				--linha 45
-				if(z = '0') then
+				if(saida_z = '0') then
 					control_data <= input(11 downto 0);
 					control_mem_to_mbr<='0';
 					control_MBR_signal<='0';
@@ -780,7 +781,7 @@ process
 				case input(15 downto 9) is
 				when "1111000" =>
 					--linha 53
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '1';
 					control_wr<='0';
@@ -796,7 +797,7 @@ process
 
 					wait for 100 ps;
 					--linha 54
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -812,7 +813,7 @@ process
 					
 					wait for 100 ps;
 					--linha 55
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '1';
 					control_wr<='1';
@@ -828,7 +829,7 @@ process
 					
 					wait for 100 ps;
 					--linha 10
-					control_data => input(11 downto 0); 
+					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='1';
@@ -844,7 +845,7 @@ process
 					
 					when "1111001" => ------------------------------------------------------------------ POPI
 					--linha 56
-					control_data => input(11 downto 0); 
+					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '1';
 					control_wr<='0';
@@ -860,7 +861,7 @@ process
 					
 					wait for 100 ps;
 					--linha 57
-					control_data => input(11 downto 0); 
+					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -876,7 +877,7 @@ process
 					
 					wait for 100 ps;
 					--linha 58
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '1';
 					control_wr<='1';
@@ -892,7 +893,7 @@ process
 					
 					wait for 100 ps;
 					--linha 10
-					control_data => input(11 downto 0); 
+					control_data <= input(11 downto 0); 
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='1';
@@ -908,7 +909,7 @@ process
 					
 					when "1111010" => ------------------------------------------------------------------------------------ PUSH
 					--linha 60
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -924,7 +925,7 @@ process
 					
 					wait for 100 ps;
 					--linha 61
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<= '1';
 					control_MAR_signal<= '1';
 					control_wr<='1';
@@ -939,8 +940,7 @@ process
 					control_sigC<="0000";
 					
 					wait for 100 ps;
-					--linha 10
-					control_data => input(11 downto 0); 
+					--linha 10<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='1';
@@ -955,8 +955,7 @@ process
 					control_sigC<="0000";
 					
 					when "1111011" => ------------------------------------------------------------------------- POP
-					--linha 62
-					control_data => input(11 downto 0); 
+					--linha 62<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '1';
 					control_wr<='0';
@@ -971,8 +970,7 @@ process
 					control_sigC<="0010";
 					
 					wait for 100 ps;
-					--linha 63
-					control_data => input(11 downto 0); 
+					--linha 63<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -988,7 +986,7 @@ process
 					
 					wait for 100 ps;
 					--linha 8
-					control_data => input(11 downto 0);
+					control_data <= input(11 downto 0);
 					control_MBR_signal<='0';
 					control_MAR_signal<='0';
 					control_wr<='0';
@@ -1052,8 +1050,7 @@ process
 					
 					
 					when "1111101" => -------------------------------------------------------------------------- SWAP
-					--linha 70
-					control_data => input(11 downto 0); 
+					--linha 70<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -1068,8 +1065,7 @@ process
 					control_sigC<="1010";
 					
 					wait for 100 ps;
-					--linha 71
-					control_data => input(11 downto 0); 
+					--linha 71<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -1084,8 +1080,7 @@ process
 					control_sigC<="0001";
 					
 					wait for 100 ps;
-					--linha 72
-					control_data => input(11 downto 0); 
+					--linha 72<
 					control_MBR_signal<= '0';
 					control_MAR_signal<= '0';
 					control_wr<='0';
@@ -1194,8 +1189,10 @@ process
 					control_alu<="00";
 					control_enc<='1';
 					control_sh<="00";
+				when others=> NULL;
 				end case;	
-			end case
+				when others=> NULL;
+			end case;
 			end if;
 end process;
 end Parte_controle;
