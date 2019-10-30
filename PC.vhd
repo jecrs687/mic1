@@ -6,15 +6,16 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 
------------ Entidade do Testbench -----------
+----------- Entidade da parte de controle -----------
 entity PC is
 	Port(
-    input : in std_logic_vector(15 downto 0);
-    output : out std_logic_vector(15 downto 0));
+    entrada : in std_logic_vector(15 downto 0) := "0000000000000000";
+	saida : out std_logic_vector(15 downto 0) := "0000000000000000";
+	control: in std_logic);
 end PC;
 ---------------------------------------------------
 
-architecture Parte_controle of PC is
+architecture Parte_Controle of PC is
 signal control_clk:std_logic :=  '0';
 signal control_MAR_signal:std_logic := '0';
 signal control_MBR_signal: std_logic := '0';
@@ -61,6 +62,7 @@ component PO is
 		mar_signal :in std_logic);
 end component;
 
+
 begin
     x1: PO
     PORT MAP(
@@ -88,339 +90,600 @@ begin
 );
 process
 	begin
-		control_clk<='1';
-	wait for 100 ps;
 		control_clk<='0';
+	wait for 100 ps;
+		control_clk<='1';
 	wait for 100 ps;  
 end process;
-process
-		begin
-			if (control_clk'event and control_clk='1') then
-				--linha 0
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='1';
-				control_wr<='0';
+process 				
+
+	begin
+		if (control_clk'event and control_clk='1') then
+			--linha 0
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			wait until (control_clk'event and control_clk='1');
+			--linha1
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0110";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00"; -- soma
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0000";
+			wait until (control_clk'event and control_clk='1');
+			--linha 2
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '1';--Amux
+			control_alu<="10";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0011";
+			wait until (control_clk'event and control_clk='1');
+			
+		case entrada(15 downto 12) is
+			when "0000" =>   ----------------------------------------- LODDX
+			--linha 6
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0011";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 7
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			-- linha 8
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '1';--Amux
+			control_alu<="10";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			when "0001" => -------------------------------------------------------------------------------------- STODD
+			--linha 9
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '1';
+			control_MAR_signal<= '1';
+			control_wr<='1';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0011";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 10
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='1';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+	
+			when "0010" =>---------------------------------------------------------------------------------------------------- ADDD
+			--linha 12
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0011";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 13
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 14
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0001";
+			control_A0 <= '1';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			when "0011" => ------------------------------------------------------------------------------------ SUBD
+			--linha 15
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0011";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 16
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0110";
+			control_sigB<="0001";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 17
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '1';--Amux
+			control_alu<="11";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 18
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			when "0100" => ------------------------------------------------------------------------------------ JPOS
+			--linha 21
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0000";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			
+			wait until (control_clk'event and control_clk='1');
+				if(saida_n = '0') then
+				--linha 22
+				control_data <= "0000"&entrada(11 downto 0);						
 				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				wait until (control_clk'event and control_clk='1');
-				--linha1
-				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0110";
-				control_sigB<="0000";
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="1000";
+				control_sigC<="0000";
 				control_A0 <= '0';--Amux
-				control_alu<="00"; -- soma
-				control_sh<="00";--barC
+				control_alu<="01";
 				control_enc<='1';
-				control_sigC<="0000";
-				wait until (control_clk'event and control_clk='1');
-				--linha 2
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '1';--Amux
-				control_alu<="10";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0011";
-				wait until (control_clk'event and control_clk='1');
-				
-			case input(15 downto 12) is
-				when "0000" =>   ----------------------------------------- LODDX
-				--linha 6
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '1';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0011";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 7
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				-- linha 8
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '1';--Amux
-				control_alu<="10";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0001";
-				
-				when "0001" => -------------------------------------------------------------------------------------- STODD
-				--linha 9
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '1';
-				control_MAR_signal<= '1';
-				control_wr<='1';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0011";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 10
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='1';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-		
-				when "0010" =>---------------------------------------------------------------------------------------------------- ADDD
-				--linha 12
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '1';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0011";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 13
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 14
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0001";
-				control_A0 <= '1';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0001";
-				
-				when "0011" => ------------------------------------------------------------------------------------ SUBD
-				--linha 15
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '1';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="0011";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 16
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0110";
-				control_sigB<="0001";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0001";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 17
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '1';--Amux
-				control_alu<="11";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 18
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="1010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0001";
-				
-				when "0100" => ------------------------------------------------------------------------------------ JPOS
-				--linha 21
-				control_data <= input(11 downto 0);
-				control_mem_to_mbr<='0';
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0000";
-				control_sigC<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_enc<='0';
 				control_sh<="00";
-				
-				wait until (control_clk'event and control_clk='1');
-					if(saida_n = '0') then
-					--linha 22
-					control_data <= input(11 downto 0);						
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="1000";
-					control_sigC<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
-					end if;
-				when "0101" => ------------------------------------------------------------------------------------ JZER
-				--linha 23
-				control_data <= input(11 downto 0);
-				control_mem_to_mbr<='0';
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0000";
-				control_sigC<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_enc<='0';
-				control_sh<="00";
-				wait until (control_clk'event and control_clk='1');
-				if(saida_z = '1') then
-					--linha 22
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="1000";
-					control_sigC<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
 				end if;
-				
-				when "0110" => ----------------[REVISAR]------------------------------------------------------------ JUMP
-				--linha 26
-				control_data <= input(11 downto 0);
+			when "0101" => ------------------------------------------------------------------------------------ JZER
+			--linha 23
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0000";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			wait until (control_clk'event and control_clk='1');
+			if(saida_z = '1') then
+				--linha 22
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
 				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0000";
+				control_sigA<="0011";
+				control_sigB<="1000";
 				control_sigC<="0000";
 				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_enc<='0';
+				control_alu<="01";
+				control_enc<='1';
 				control_sh<="00";
-				
-				wait until (control_clk'event and control_clk='1');
-				
-				control_data <= input(11 downto 0);
+			end if;
+			
+			when "0110" => ----------------[REVISAR]------------------------------------------------------------ JUMP
+			--linha 26
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0000";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			
+			wait until (control_clk'event and control_clk='1');
+			
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0011";
+			control_sigB<="0100";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="01";
+			control_enc<='1';
+			control_sh<="00";
+			
+			when "0111" => ------------------------------------------------------------------------------------ LOCO
+			--linha 27
+			
+			
+			
+			when "1000" => ------------------------------------------------------------------------------------ LODL
+			--linha 31
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0010";
+			control_sigB<="0011";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 32
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 7
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 8
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '1';--Amux
+			control_alu<="10";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			when "1001" => ----------------------------------------------------------------------------------- STOL
+			--linha 33
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0011";
+			control_sigB<="0010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 34
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='1';
+			control_MAR_signal<='1';
+			control_wr<='1';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			----linha 10
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='1';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			when "1010" => ------------------------------------------------------------------------------------- ADDL
+			--linha 36
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0011";
+			control_sigB<="0010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 37
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			when "1011" => -----------------------------------------------------------------------------------------SUBL
+			--linha 38
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0011";
+			control_sigB<="0010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 39
+			control_data <= "0000"&entrada(11 downto 0); 
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '1';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0000";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='0';
+			control_sigC<="0000";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 16
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='1';
+			control_sigA<="0110";
+			control_sigB<="0001";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="0001";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 17
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0000";
+			control_A0 <= '1';--Amux
+			control_alu<="11";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 18
+			control_data <= "0000"&entrada(11 downto 0);
+			control_MBR_signal<= '0';
+			control_MAR_signal<= '0';
+			control_wr<='0';
+			control_mem_to_mbr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="1010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_sh<="00";--barC
+			control_enc<='1';
+			control_sigC<="1010"; 
+			
+			when "1100" => --------------------------------------------------------------------------------------------------------------JNEG
+			--linha 42
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0000";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			wait until (control_clk'event and control_clk='1');
+			if(saida_n = '1') then
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
@@ -433,38 +696,134 @@ process
 				control_alu<="01";
 				control_enc<='1';
 				control_sh<="00";
-				
-				when "0111" => ------------------------------------------------------------------------------------ LOCO
-				--linha 27
-				
-				
-				
-				when "1000" => ------------------------------------------------------------------------------------ LODL
-				--linha 31
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
+			end if;
+			
+			when "1101" => ------------------------------------------------------------------------------------------------------------------------------- JNZE
+			--linha 44
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0001";
+			control_sigB<="0000";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 45
+			if(saida_z = '0') then
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
 				control_rd<='0';
-				control_sigA<="0010";
-				control_sigB<="0011";
+				control_sigA<="0011";
+				control_sigB<="0100";
+				control_sigC<="0000";
 				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
+				control_alu<="01";
 				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 32
-				control_data <= input(11 downto 0); 
+				control_sh<="00";
+			end if;
+			
+			when "1110" => ----------------------------------------------------------------------------------------------------------------------- CALL
+			--linha 47
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0111";
+			control_sigB<="0010";
+			control_sigC<="0010";
+			control_A0 <= '0';--Amux
+			control_alu<="00";
+			control_enc<='1';
+			control_sh<="00";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 48
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='1';
+			control_MAR_signal<='1';
+			control_wr<='1';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0010";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="10";
+			control_enc<='0';
+			control_sh<="00";
+			
+			wait until (control_clk'event and control_clk='1');
+			--linha 49
+			control_data <= "0000"&entrada(11 downto 0);
+			control_mem_to_mbr<='0';
+			control_MBR_signal<='0';
+			control_MAR_signal<='0';
+			control_wr<='0';
+			control_rd<='0';
+			control_sigA<="0000";
+			control_sigB<="0100";
+			control_sigC<="0000";
+			control_A0 <= '0';--Amux
+			control_alu<="01";
+			control_enc<='1';
+			control_sh<="00";
+
+
+			case entrada(15 downto 9) is
+			when "1111000" =>
+				--linha 53
+				control_data <= "0000"&entrada(11 downto 0);
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
 				control_mem_to_mbr<='0';
 				control_rd<='1';
 				control_sigA<="0000";
-				control_sigB<="1010";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+
+				wait until (control_clk'event and control_clk='1');
+				--linha 54
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0010";
+				control_sigB<="0111";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 55
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0010";
 				control_A0 <= '0';--Amux
 				control_alu<="00";
 				control_sh<="00";--barC
@@ -472,8 +831,149 @@ process
 				control_sigC<="0000";
 				
 				wait until (control_clk'event and control_clk='1');
-				--linha 7
-				control_data <= input(11 downto 0); 
+				--linha 10
+				control_data <= "0000"&entrada(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				when "1111001" => ------------------------------------------------------------------ POPI
+				--linha 56
+				control_data <= "0000"&entrada(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0010";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 57
+				control_data <= "0000"&entrada(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 58
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 10
+				control_data <= "0000"&entrada(11 downto 0); 
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				when "1111010" => ------------------------------------------------------------------------------------ PUSH
+				--linha 60
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0010";
+				control_sigB<="0111";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 61
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<= '1';
+				control_MAR_signal<= '1';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 10<
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='1';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0000";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='0';
+				control_sigC<="0000";
+				
+				when "1111011" => ------------------------------------------------------------------------- POP
+				--linha 62<
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '1';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='1';
+				control_sigA<="0010";
+				control_sigB<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 63<
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
@@ -489,9 +989,9 @@ process
 				
 				wait until (control_clk'event and control_clk='1');
 				--linha 8
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
+				control_data <= "0000"&entrada(11 downto 0);
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
 				control_wr<='0';
 				control_mem_to_mbr<='1';
 				control_rd<='0';
@@ -500,244 +1000,18 @@ process
 				control_A0 <= '1';--Amux
 				control_alu<="10";
 				control_sh<="00";--barC
-				control_enc<='1';
+				control_enc<='0';
 				control_sigC<="0001";
 				
-				when "1001" => ----------------------------------------------------------------------------------- STOL
-				--linha 33
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
+				when "1111100" => -------------------------------------------------------------------------- RETN
+				--linha 67
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0011";
-				control_sigB<="0010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 34
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='1';
-				control_MAR_signal<='1';
-				control_wr<='1';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="1010";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				----linha 10
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='1';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				when "1010" => ------------------------------------------------------------------------------------- ADDL
-				--linha 36
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0011";
-				control_sigB<="0010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 37
-				control_data <= input(11 downto 0);
 				control_MBR_signal<='0';
 				control_MAR_signal<='1';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="1010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				when "1011" => -----------------------------------------------------------------------------------------SUBL
-				--linha 38
-				control_data <= input(11 downto 0);
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0011";
-				control_sigB<="0010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 39
-				control_data <= input(11 downto 0); 
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '1';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='1';
-				control_sigA<="0000";
-				control_sigB<="1010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='0';
-				control_sigC<="0000";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 16
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
 				control_rd<='1';
 				control_sigA<="0110";
-				control_sigB<="0001";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="0001";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 17
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='1';
-				control_rd<='0';
-				control_sigA<="0000";
-				control_sigB<="0000";
-				control_A0 <= '1';--Amux
-				control_alu<="11";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 18
-				control_data <= input(11 downto 0);
-				control_MBR_signal<= '0';
-				control_MAR_signal<= '0';
-				control_wr<='0';
-				control_mem_to_mbr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="1010";
-				control_A0 <= '0';--Amux
-				control_alu<="00";
-				control_sh<="00";--barC
-				control_enc<='1';
-				control_sigC<="1010"; 
-				
-				when "1100" => --------------------------------------------------------------------------------------------------------------JNEG
-				--linha 42
-				control_data <= input(11 downto 0);
-				control_mem_to_mbr<='0';
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0000";
-				control_sigC<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_enc<='0';
-				control_sh<="00";
-				wait until (control_clk'event and control_clk='1');
-				if(saida_n = '1') then
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="0100";
-					control_sigC<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
-				end if;
-				
-				when "1101" => ------------------------------------------------------------------------------------------------------------------------------- JNZE
-				--linha 44
-				control_data <= input(11 downto 0);
-				control_mem_to_mbr<='0';
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_rd<='0';
-				control_sigA<="0001";
-				control_sigB<="0000";
-				control_sigC<="0000";
-				control_A0 <= '0';--Amux
-				control_alu<="10";
-				control_enc<='0';
-				control_sh<="00";
-				
-				wait until (control_clk'event and control_clk='1');
-				--linha 45
-				if(saida_z = '0') then
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="0100";
-					control_sigC<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
-				end if;
-				
-				when "1110" => ----------------------------------------------------------------------------------------------------------------------- CALL
-				--linha 47
-				control_data <= input(11 downto 0);
-				control_mem_to_mbr<='0';
-				control_MBR_signal<='0';
-				control_MAR_signal<='0';
-				control_wr<='0';
-				control_rd<='0';
-				control_sigA<="0111";
 				control_sigB<="0010";
 				control_sigC<="0010";
 				control_A0 <= '0';--Amux
@@ -746,453 +1020,197 @@ process
 				control_sh<="00";
 				
 				wait until (control_clk'event and control_clk='1');
-				--linha 48
-				control_data <= input(11 downto 0);
+				--linha 68
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
-				control_MBR_signal<='1';
-				control_MAR_signal<='1';
-				control_wr<='1';
-				control_rd<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='1';
 				control_sigA<="0000";
-				control_sigB<="0010";
+				control_sigB<="0000";
 				control_sigC<="0000";
 				control_A0 <= '0';--Amux
-				control_alu<="10";
+				control_alu<="00";
 				control_enc<='0';
 				control_sh<="00";
 				
 				wait until (control_clk'event and control_clk='1');
-				--linha 49
-				control_data <= input(11 downto 0);
+				--linha 69
+				control_data <= "0000"&entrada(11 downto 0);
 				control_mem_to_mbr<='0';
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
 				control_rd<='0';
 				control_sigA<="0000";
-				control_sigB<="0100";
+				control_sigB<="0000";
 				control_sigC<="0000";
+				control_A0 <= '1';--Amux
+				control_alu<="10";
+				control_enc<='1';
+				control_sh<="00";
+				
+				
+				when "1111101" => -------------------------------------------------------------------------- SWAP
+				--linha 70<
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0001";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="1010";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 71<
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="0010";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0001";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 72<
+				control_MBR_signal<= '0';
+				control_MAR_signal<= '0';
+				control_wr<='0';
+				control_mem_to_mbr<='0';
+				control_rd<='0';
+				control_sigA<="1010";
+				control_sigB<="0000";
+				control_A0 <= '0';--Amux
+				control_alu<="10";
+				control_sh<="00";--barC
+				control_enc<='1';
+				control_sigC<="0010";
+				
+				when "1111110" => ------------------------------------------------------------------------------------------------------------ INSP
+				--linha 74
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0100";
+				control_sigC<="1010";
 				control_A0 <= '0';--Amux
 				control_alu<="01";
 				control_enc<='1';
 				control_sh<="00";
-
-
-				case input(15 downto 9) is
-				when "1111000" =>
-					--linha 53
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '1';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0000";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-
-					wait until (control_clk'event and control_clk='1');
-					--linha 54
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0010";
-					control_sigB<="0111";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0010";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 55
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '1';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 10
-					control_data <= input(11 downto 0); 
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					when "1111001" => ------------------------------------------------------------------ POPI
-					--linha 56
-					control_data <= input(11 downto 0); 
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '1';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0010";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0010";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 57
-					control_data <= input(11 downto 0); 
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 58
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '1';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 10
-					control_data <= input(11 downto 0); 
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					when "1111010" => ------------------------------------------------------------------------------------ PUSH
-					--linha 60
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0010";
-					control_sigB<="0111";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0010";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 61
-					control_data <= input(11 downto 0);
-					control_MBR_signal<= '1';
-					control_MAR_signal<= '1';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0001";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 10<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='1';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					when "1111011" => ------------------------------------------------------------------------- POP
-					--linha 62<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '1';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0010";
-					control_sigB<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0010";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 63<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='1';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0000";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 8
-					control_data <= input(11 downto 0);
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_mem_to_mbr<='1';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_A0 <= '1';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='0';
-					control_sigC<="0001";
-					
-					when "1111100" => -------------------------------------------------------------------------- RETN
-					--linha 67
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='1';
-					control_wr<='0';
-					control_rd<='1';
-					control_sigA<="0110";
-					control_sigB<="0010";
-					control_sigC<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_enc<='1';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 68
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='1';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_sigC<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_enc<='0';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 69
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0000";
-					control_sigB<="0000";
-					control_sigC<="0000";
-					control_A0 <= '1';--Amux
-					control_alu<="10";
-					control_enc<='1';
-					control_sh<="00";
-					
-					
-					when "1111101" => -------------------------------------------------------------------------- SWAP
-					--linha 70<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0001";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="1010";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 71<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="0010";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0001";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 72<
-					control_MBR_signal<= '0';
-					control_MAR_signal<= '0';
-					control_wr<='0';
-					control_mem_to_mbr<='0';
-					control_rd<='0';
-					control_sigA<="1010";
-					control_sigB<="0000";
-					control_A0 <= '0';--Amux
-					control_alu<="10";
-					control_sh<="00";--barC
-					control_enc<='1';
-					control_sigC<="0010";
-					
-					when "1111110" => ------------------------------------------------------------------------------------------------------------ INSP
-					--linha 74
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="0100";
-					control_sigC<="1010";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 75
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="1010";
-					control_sigB<="0010";
-					control_sigC<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_enc<='1';
-					control_sh<="00";
-					
-					when "1111111" => ------------------------------------------------------------------------------------------------ DESP
-					--linha 76
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="0011";
-					control_sigB<="0100";
-					control_sigC<="1010";
-					control_A0 <= '0';--Amux
-					control_alu<="01";
-					control_enc<='1';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 77
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="1010";
-					control_sigB<="0100";
-					control_sigC<="1010";
-					control_A0 <= '0';--Amux
-					control_alu<="11";
-					control_enc<='1';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 78
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="1010";
-					control_sigB<="0110";
-					control_sigC<="1010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_enc<='1';
-					control_sh<="00";
-					
-					wait until (control_clk'event and control_clk='1');
-					--linha 75
-					control_data <= input(11 downto 0);
-					control_mem_to_mbr<='0';
-					control_MBR_signal<='0';
-					control_MAR_signal<='0';
-					control_wr<='0';
-					control_rd<='0';
-					control_sigA<="1010";
-					control_sigB<="0010";
-					control_sigC<="0010";
-					control_A0 <= '0';--Amux
-					control_alu<="00";
-					control_enc<='1';
-					control_sh<="00";
-				when others=> NULL;
-				end case;	
-				when others=> NULL;
-			end case;
-			end if;
-end process;
-end Parte_controle;
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 75
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="1010";
+				control_sigB<="0010";
+				control_sigC<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_enc<='1';
+				control_sh<="00";
+				
+				when "1111111" => ------------------------------------------------------------------------------------------------ DESP
+				--linha 76
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="0011";
+				control_sigB<="0100";
+				control_sigC<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="01";
+				control_enc<='1';
+				control_sh<="00";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 77
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="1010";
+				control_sigB<="0100";
+				control_sigC<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="11";
+				control_enc<='1';
+				control_sh<="00";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 78
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="1010";
+				control_sigB<="0110";
+				control_sigC<="1010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_enc<='1';
+				control_sh<="00";
+				
+				wait until (control_clk'event and control_clk='1');
+				--linha 75
+				control_data <= "0000"&entrada(11 downto 0);
+				control_mem_to_mbr<='0';
+				control_MBR_signal<='0';
+				control_MAR_signal<='0';
+				control_wr<='0';
+				control_rd<='0';
+				control_sigA<="1010";
+				control_sigB<="0010";
+				control_sigC<="0010";
+				control_A0 <= '0';--Amux
+				control_alu<="00";
+				control_enc<='1';
+				control_sh<="00";
+			when others=> NULL;
+			end case;	
+			when others=> NULL;
+		end case;
+		else
+		control_data <= "0000"&entrada(11 downto 0);
+		control_mem_to_mbr<='0';
+		control_MBR_signal<='0';
+		control_MAR_signal<='0';
+		control_wr<='0';
+		control_rd<='0';
+		control_sigA<="0000";
+		control_sigB<="0000";
+		control_sigC<="0000";
+		control_A0 <= '0';--Amux
+		control_alu<="00";
+		control_enc<='0';
+		control_sh<="00";
+		wait until (control_clk'event and control_clk='1');
+		end if;
+	end process;
+end Parte_Controle;
