@@ -10,8 +10,7 @@ USE ieee.std_logic_1164.all;
 entity PC is
 	Port(
     entrada : in std_logic_vector(15 downto 0) := "0000000000000000";
-	saida : out std_logic_vector(15 downto 0) := "0000000000000000";
-	control: in std_logic);
+	saida : out std_logic_vector(15 downto 0) := "0000000000000000");
 end PC;
 ---------------------------------------------------
 
@@ -96,7 +95,6 @@ process
 	wait for 100 ps;  
 end process;
 process 				
-
 	begin
 		if (control_clk'event and control_clk='1') then
 			--linha 0
@@ -119,7 +117,7 @@ process
 			control_MBR_signal<='0';
 			control_MAR_signal<='0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0110";
 			control_sigB<="0000";
@@ -134,14 +132,14 @@ process
 			control_MBR_signal<='0';
 			control_MAR_signal<='0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0000";
 			control_A0 <= '1';--Amux
 			control_alu<="10";
 			control_sh<="00";--barC
-			control_enc<='1';
+			control_enc<='0';
 			control_sigC<="0011";
 			wait until (control_clk'event and control_clk='1');
 			
@@ -152,7 +150,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '1';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0000";
 			control_sigB<="0011";
@@ -168,7 +166,7 @@ process
 			control_MBR_signal<='0';
 			control_MAR_signal<='0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -177,14 +175,14 @@ process
 			control_sh<="00";--barC
 			control_enc<='0';
 			control_sigC<="0000";
-			
+
 			wait until (control_clk'event and control_clk='1');
 			-- linha 8
 			control_data <= "0000"&entrada(11 downto 0);
 			control_MBR_signal<='0';
 			control_MAR_signal<='0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -249,7 +247,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -265,7 +263,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0001";
@@ -288,7 +286,7 @@ process
 			control_A0 <= '0';--Amux
 			control_alu<="00";
 			control_sh<="00";--barC
-			control_enc<='0';
+			control_enc<='1';
 			control_sigC<="0000";
 			
 			wait until (control_clk'event and control_clk='1');
@@ -297,7 +295,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0110";
 			control_sigB<="0001";
@@ -313,7 +311,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -385,7 +383,7 @@ process
 			control_sigC<="0000";
 			control_A0 <= '0';--Amux
 			control_alu<="10";
-			control_enc<='0';
+			control_enc<='1';
 			control_sh<="00";
 			wait until (control_clk'event and control_clk='1');
 			if(saida_z = '1') then
@@ -413,16 +411,16 @@ process
 			control_MAR_signal<='0';
 			control_wr<='0';
 			control_rd<='0';
-			control_sigA<="0001";
-			control_sigB<="0000";
+			control_sigA<="0011";
+			control_sigB<="0101";
 			control_sigC<="0000";
 			control_A0 <= '0';--Amux
-			control_alu<="10";
-			control_enc<='0';
+			control_alu<="01";
+			control_enc<='1';
 			control_sh<="00";
-			
-			wait until (control_clk'event and control_clk='1');
-			
+
+			when "0111" => ------------------------------------------------------------------------------------ LOCO
+			--linha 27
 			control_data <= "0000"&entrada(11 downto 0);
 			control_mem_to_mbr<='0';
 			control_MBR_signal<='0';
@@ -430,16 +428,12 @@ process
 			control_wr<='0';
 			control_rd<='0';
 			control_sigA<="0011";
-			control_sigB<="0100";
-			control_sigC<="0000";
+			control_sigB<="0101";
+			control_sigC<="0001";
 			control_A0 <= '0';--Amux
 			control_alu<="01";
 			control_enc<='1';
 			control_sh<="00";
-			
-			when "0111" => ------------------------------------------------------------------------------------ LOCO
-			--linha 27
-			
 			
 			
 			when "1000" => ------------------------------------------------------------------------------------ LODL
@@ -480,7 +474,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -496,7 +490,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -624,7 +618,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='0';
+			control_mem_to_mbr<='1';
 			control_rd<='1';
 			control_sigA<="0110";
 			control_sigB<="0001";
@@ -640,7 +634,7 @@ process
 			control_MBR_signal<= '0';
 			control_MAR_signal<= '0';
 			control_wr<='0';
-			control_mem_to_mbr<='1';
+			control_mem_to_mbr<='0';
 			control_rd<='0';
 			control_sigA<="0000";
 			control_sigB<="0000";
@@ -804,7 +798,7 @@ process
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_rd<='1';
 				control_sigA<="0010";
 				control_sigB<="0111";
@@ -852,7 +846,7 @@ process
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_rd<='1';
 				control_sigA<="0010";
 				control_sigB<="0010";
@@ -868,7 +862,7 @@ process
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_rd<='1';
 				control_sigA<="0000";
 				control_sigB<="0000";
@@ -962,7 +956,7 @@ process
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '1';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_rd<='1';
 				control_sigA<="0010";
 				control_sigB<="0010";
@@ -977,7 +971,7 @@ process
 				control_MBR_signal<= '0';
 				control_MAR_signal<= '0';
 				control_wr<='0';
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_rd<='1';
 				control_sigA<="0000";
 				control_sigB<="0000";
@@ -1006,7 +1000,7 @@ process
 				when "1111100" => -------------------------------------------------------------------------- RETN
 				--linha 67
 				control_data <= "0000"&entrada(11 downto 0);
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_MBR_signal<='0';
 				control_MAR_signal<='1';
 				control_wr<='0';
@@ -1022,7 +1016,7 @@ process
 				wait until (control_clk'event and control_clk='1');
 				--linha 68
 				control_data <= "0000"&entrada(11 downto 0);
-				control_mem_to_mbr<='0';
+				control_mem_to_mbr<='1';
 				control_MBR_signal<='0';
 				control_MAR_signal<='0';
 				control_wr<='0';
@@ -1210,7 +1204,7 @@ process
 		control_alu<="00";
 		control_enc<='0';
 		control_sh<="00";
-		wait until (control_clk'event and control_clk='1');
 		end if;
+		wait until (control_clk'event and control_clk='1');
 	end process;
 end Parte_Controle;
